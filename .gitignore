@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+Modbus-Simple.pcap
+4SICS-GeekLounge-151020.pcap
+4SICS.pcap
+*.pcapng
