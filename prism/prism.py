@@ -2,6 +2,7 @@ from scapy.utils import RawPcapNgReader
 from scapy.layers.l2 import Ether
 from scapy.layers.inet import IP, TCP
 from prism.machine import Machine
+from prism.visualizer import Visualizer
 import scapy.contrib.modbus as mb  
 import os
 import sys
@@ -40,9 +41,6 @@ class Prism():
         self.packets = []
 
     def launch(self):
-        if self.pcap_file == "":
-            print("No pcap file loaded, please relaunch with appropriate file")
-
         self.pcap_filter()
         self.pcap_sorter()
         self.pcap_classifier()
@@ -66,7 +64,6 @@ class Prism():
         # Fixme need to correct filter to properly check through ethernet 
         # Start processing the passed in pcap
         for (packet_data, packet_metadata) in RawPcapNgReader(self.pcap_file):
-
             # Create the ethernet header for processed packet
             ethernet_packet = Ether(packet_data)
 
@@ -160,20 +157,17 @@ class Prism():
                 print("Found an Undefined device!")        
 
     def create_output(self):
-
         # First we create a new file with the given name
-
         # We then convert our machines list/dictionary to JSON and 
         # write it to the file
-        
         print("")
 
-    def visualizer(self):
-        
-        # Manipulate the machines list as needed to perform the appropriate 
-        # visualization
+    def visualizer(self):        
+        net = Visualizer()
+        net.add_machines(self.machines)
+        net.show()
 
-        print("")
+
 
     def modbus_type(self, tcp_packet):
         mb_packet = tcp_packet['ModbusADU']

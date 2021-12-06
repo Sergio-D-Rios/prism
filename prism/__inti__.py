@@ -1,1 +1,1 @@
-__all__ = ['prism', 'machine']
+__all__ = ['prism', 'machine', 'visualizer']
