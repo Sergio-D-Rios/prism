@@ -22,16 +22,23 @@ _conversation_types = {
     4: 'not_implemented'
 }
 
+_supported_protocols = [
+    'modbus',
+    's7comm',
+    'cip',
+    'bacnet'
+]
+
 class Prism():
 
     def __init__(self, 
                  pcap_file: str=None, 
-                 protocol_filter: list=['modbus'], 
+                 protocol_filters: list=['modbus'], 
                  input_file: str=None,
                  output_file: str=None,
                  visualize: bool=False):
         self.pcap_file = pcap_file
-        self.protocol_filter = protocol_filter
+        self.protocol_filters = protocol_filters
         self.input_file = input_file
         self.output_file = output_file
         self.visualize_flag = visualize
@@ -73,6 +80,13 @@ class Prism():
             self.visualizer()
 
     def pcap_filter(self):
+
+        # Check that passed in filters are usable
+        for filter in self.protocol_filters:
+            if filter not in _supported_protocols:
+                print(f"{filter} is not a supported protocol!")
+                exit()
+
         # Fixme need to correct filter to properly check through ethernet 
         # Start processing the passed in pcap
         for (packet_data, packet_metadata) in RawPcapNgReader(self.pcap_file):
@@ -85,12 +99,21 @@ class Prism():
                 ip_packet = ethernet_packet[IP]
                 tcp_packet = ip_packet[TCP]
 
-                # Filter by desired ICS protocol here for now we are only looking
-                # for packets that include modbus traffic on port 502
-                if tcp_packet.sport == 502 or tcp_packet.dport == 502:
-                    if (mb.ModbusADURequest in tcp_packet 
-                            or mb.ModbusADUResponse in tcp_packet):
-                        self.packets.append(ethernet_packet)
+                # Filter by desired ICS protocol here 
+                if 'modbus' in self.protocol_filters:
+                    if tcp_packet.sport == 502 or tcp_packet.dport == 502:
+                        if (mb.ModbusADURequest in tcp_packet 
+                                or mb.ModbusADUResponse in tcp_packet):
+                            self.packets.append(ethernet_packet)
+                elif 's7comm' in self.protocol_filters:
+                    print('s7comm not yet supported')
+                    exit()
+                elif 'cip' in self.protocol_filters:
+                    print('cip not yet supported')
+                    exit()
+                elif 'bacnet' in self.protocol_filters:
+                    print('bacnet not yet supported')
+                    exit()
 
             except Exception as err:
                 print(err)

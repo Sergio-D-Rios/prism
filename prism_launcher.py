@@ -45,7 +45,7 @@ def argumentParser() -> argparse.Namespace:
     parser.add_argument('-pc','--pcap_file', type=str, action='store',
                         help=manual_descriptions['pcap_file'])
 
-    parser.add_argument('-pf', '--protocol_filter', nargs='+', action='store',
+    parser.add_argument('-pf', '--protocol_filters', nargs='+', action='store',
                         help=manual_descriptions['protocol_filter'])
 
     parser.add_argument('-i', '--input_file', type=str, action='store',
