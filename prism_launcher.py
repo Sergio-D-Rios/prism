@@ -22,6 +22,10 @@ manual_descriptions = {
     ' This list will then be used to filter the packets used for classification' 
     ' by prism. prism uses MODBUS as a protocol filter by default.',
 
+    "input": 'Used in combination with the visualization flag -v, in order to'
+    ' load a previously generated or custom machine list into prism. Passed in'
+    ' file should be a JSON file containing a list of machine objects',
+
     "output": 'Used to generate a JSON output file containing the now' 
     ' classified network topology from the used PCAP file. Type in the desired' 
     ' file name after the flag. Set to false by default.',
@@ -38,12 +42,15 @@ def argumentParser() -> argparse.Namespace:
         description=manual_descriptions['proj_description'],
         formatter_class=RawDescriptionHelpFormatter)
 
-    parser.add_argument('pcap_file', type=str, action='store',
+    parser.add_argument('-pcap_file', type=str, action='store',
                         help=manual_descriptions['pcap_file'])
 
     parser.add_argument('-pf', '--protocol_filter', nargs='+', action='store',
                         help=manual_descriptions['protocol_filter'])
 
+    parser.add_argument('-i', '--input_file', type=str, action='store',
+                        help=manual_descriptions['input'])
+        
     parser.add_argument('-o', '--output_file', type=str, action='store',
                          help=manual_descriptions['output'])
                 

@@ -25,15 +25,14 @@ _conversation_types = {
 class Prism():
 
     def __init__(self, 
-                 pcap_file: str="", 
+                 pcap_file: str=None, 
                  protocol_filter: list=['modbus'], 
-                 input_file: str="",
-                 output_file: str="",
+                 input_file: str=None,
+                 output_file: str=None,
                  visualize: bool=False):
 
-        # Make sure that the file provided is usable
-        if not os.path.isfile(pcap_file):
-            print(f"Unable to open the file: {pcap_file}", file=sys.stderr)
+        print(f"default argument {input_file}")
+        print(f"default argument {output_file}")
 
         self.pcap_file = pcap_file
         self.protocol_filter = protocol_filter
@@ -44,9 +43,20 @@ class Prism():
         self.packets = []
 
     def launch(self):
-        if not self.input_file == "":
+        if self.input_file != None:
+            # Make sure that the pcap file provided is usable
+            if not os.path.isfile(self.input_file):
+                print(f"Unable to open the file: {self.input_file}", 
+                      file=sys.stderr)
+
             self.process_input()
-        else:
+
+        elif self.pcap_file != None:
+            # Make sure that the pcap file provided is usable
+            if not os.path.isfile(self.pcap_file):
+                print(f"Unable to open the file: {self.pcap_file}", 
+                      file=sys.stderr)
+
             self.pcap_filter()
             self.pcap_sorter()
             self.pcap_classifier()
@@ -60,7 +70,10 @@ class Prism():
                     print(conversation)
                 print(machine.classification)
 
-        if not self.output_file == "":
+            
+        print(f"output file is this {self.output_file}")
+
+        if self.output_file != None:
             self.create_output()
         
         if self.visualize_flag:
@@ -164,7 +177,9 @@ class Prism():
 
 
     def process_input(self):
-        pass
+        input_file = open(self.input_file)
+        machines_json = json.load(input_file)
+        print(machines_json)
 
     def create_output(self):
         # We need to serialize the list of machine objects into something 
@@ -175,10 +190,10 @@ class Prism():
 
         print(f'Writing Classified machines to: {self.output_file}')
         with open(self.output_file, 'w') as output_file:
-            json.dump(machines_json, output_file, indent=4)
+            json.dump(machines_json, output_file, sort_keys=True, indent=4)
         
 
-    def visualizer(self):        
+    def visualizer(self):
         net = Visualizer()
         net.add_machines(self.machines)
         net.show()

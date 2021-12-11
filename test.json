@@ -1,14 +1,11 @@
 [
     {
-        "ip": "192.168.4.40",
-        "protocols": [
-            "modbus"
-        ],
-        "conversation_types": [
-            "reader"
-        ],
         "associated_machines": [
             "192.168.100.20"
+        ],
+        "classification": "Alarm",
+        "conversation_types": [
+            "reader"
         ],
         "conversations": [
             [
@@ -18,18 +15,18 @@
                 "reader"
             ]
         ],
-        "classification": "Alarm"
-    },
-    {
-        "ip": "192.168.100.99",
+        "ip": "192.168.4.40",
         "protocols": [
             "modbus"
-        ],
-        "conversation_types": [
-            "reader"
-        ],
+        ]
+    },
+    {
         "associated_machines": [
             "192.168.100.20"
+        ],
+        "classification": "Alarm",
+        "conversation_types": [
+            "reader"
         ],
         "conversations": [
             [
@@ -39,20 +36,20 @@
                 "reader"
             ]
         ],
-        "classification": "Alarm"
-    },
-    {
-        "ip": "192.168.100.20",
+        "ip": "192.168.100.99",
         "protocols": [
             "modbus"
-        ],
-        "conversation_types": [
-            "processor"
-        ],
+        ]
+    },
+    {
         "associated_machines": [
             "192.168.100.99",
             "192.168.4.40",
             "192.168.100.210"
+        ],
+        "classification": "PLC",
+        "conversation_types": [
+            "processor"
         ],
         "conversations": [
             [
@@ -74,19 +71,19 @@
                 "processor"
             ]
         ],
-        "classification": "PLC"
-    },
-    {
-        "ip": "192.168.100.210",
+        "ip": "192.168.100.20",
         "protocols": [
             "modbus"
+        ]
+    },
+    {
+        "associated_machines": [
+            "192.168.100.20"
         ],
+        "classification": "HMI",
         "conversation_types": [
             "reader",
             "writer"
-        ],
-        "associated_machines": [
-            "192.168.100.20"
         ],
         "conversations": [
             [
@@ -102,6 +99,9 @@
                 "writer"
             ]
         ],
-        "classification": "HMI"
+        "ip": "192.168.100.210",
+        "protocols": [
+            "modbus"
+        ]
     }
 ]
