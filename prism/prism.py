@@ -1,9 +1,10 @@
 from scapy.utils import RawPcapNgReader
 from scapy.layers.l2 import Ether
 from scapy.layers.inet import IP, TCP
+import scapy.contrib.modbus as mb
 from prism.machine import Machine
 from prism.visualizer import Visualizer
-import scapy.contrib.modbus as mb  
+import json
 import os
 import sys
 
@@ -26,6 +27,7 @@ class Prism():
     def __init__(self, 
                  pcap_file: str="", 
                  protocol_filter: list=['modbus'], 
+                 input_file: str="",
                  output_file: str="",
                  visualize: bool=False):
 
@@ -53,6 +55,9 @@ class Prism():
             for conversation in machine.conversations:
                 print(conversation)
             print(machine.classification)
+
+        if not self.input_file == "":
+            self.process_input()
 
         if not self.output_file == "":
             self.create_output()
@@ -156,11 +161,13 @@ class Prism():
                 machine.classification = _machine_classifications[4]
                 print("Found an Undefined device!")        
 
+
+    def process_input(self):
+        pass
+
     def create_output(self):
-        # First we create a new file with the given name
-        # We then convert our machines list/dictionary to JSON and 
-        # write it to the file
-        print("")
+        with open(self.output_file, 'w') as output_file:
+            json.dump(self.machines, output_file)
 
     def visualizer(self):        
         net = Visualizer()
