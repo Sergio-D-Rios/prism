@@ -1,12 +1,18 @@
 class Machine():
 
-    def __init__(self, ip):
+    def __init__(self, 
+                 ip, 
+                 protocols: list=None, 
+                 conversation_types: list=None,
+                 associated_machines: list=None,
+                 conversations: list=None,
+                 classification: str=None):
         self.ip = ip
-        self.protocols = []
-        self.conversation_types = []
-        self.associated_machines = []
-        self.conversations = []
-        self.classification = ""
+        self.protocols = protocols or []
+        self.conversation_types = conversation_types or []
+        self.associated_machines = associated_machines or []
+        self.conversations = conversations or []
+        self.classification = classification or ""
 
     def __str__(self):
 

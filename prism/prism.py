@@ -30,10 +30,6 @@ class Prism():
                  input_file: str=None,
                  output_file: str=None,
                  visualize: bool=False):
-
-        print(f"default argument {input_file}")
-        print(f"default argument {output_file}")
-
         self.pcap_file = pcap_file
         self.protocol_filter = protocol_filter
         self.input_file = input_file
@@ -61,17 +57,14 @@ class Prism():
             self.pcap_sorter()
             self.pcap_classifier()
 
-            for machine in self.machines:
-                print(machine.ip)
-                print(machine.protocols)
-                print(machine.conversation_types)
-                print(machine.associated_machines)
-                for conversation in machine.conversations:
-                    print(conversation)
-                print(machine.classification)
-
-            
-        print(f"output file is this {self.output_file}")
+        for machine in self.machines:
+            print(machine.ip)
+            print(machine.protocols)
+            print(machine.conversation_types)
+            print(machine.associated_machines)
+            for conversation in machine.conversations:
+                print(conversation)
+            print(machine.classification)
 
         if self.output_file != None:
             self.create_output()
@@ -179,8 +172,10 @@ class Prism():
     def process_input(self):
         input_file = open(self.input_file)
         machines_json = json.load(input_file)
-        print(machines_json)
-
+        for machine in machines_json:
+            new_machine = Machine(**machine)
+            self.machines.append(new_machine)
+        
     def create_output(self):
         # We need to serialize the list of machine objects into something 
         # that is JSON serializable

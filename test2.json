@@ -1,0 +1,127 @@
+[
+    {
+        "associated_machines": [
+            "10.0.0.3",
+            "10.0.0.8"
+        ],
+        "classification": "Alarm",
+        "conversation_types": [
+            "not_implemented",
+            "reader"
+        ],
+        "conversations": [
+            [
+                "10.0.0.57",
+                "10.0.0.3",
+                "modbus",
+                "not_implemented"
+            ],
+            [
+                "10.0.0.57",
+                "10.0.0.8",
+                "modbus",
+                "not_implemented"
+            ],
+            [
+                "10.0.0.57",
+                "10.0.0.3",
+                "modbus",
+                "reader"
+            ],
+            [
+                "10.0.0.57",
+                "10.0.0.8",
+                "modbus",
+                "reader"
+            ]
+        ],
+        "ip": "10.0.0.57",
+        "protocols": [
+            "modbus"
+        ]
+    },
+    {
+        "associated_machines": [
+            "10.0.0.57",
+            "10.0.0.9"
+        ],
+        "classification": "PLC",
+        "conversation_types": [
+            "not_implemented",
+            "processor"
+        ],
+        "conversations": [
+            [
+                "10.0.0.3",
+                "10.0.0.57",
+                "modbus",
+                "not_implemented"
+            ],
+            [
+                "10.0.0.3",
+                "10.0.0.57",
+                "modbus",
+                "processor"
+            ],
+            [
+                "10.0.0.3",
+                "10.0.0.9",
+                "modbus",
+                "processor"
+            ]
+        ],
+        "ip": "10.0.0.3",
+        "protocols": [
+            "modbus"
+        ]
+    },
+    {
+        "associated_machines": [
+            "10.0.0.3"
+        ],
+        "classification": "HMI",
+        "conversation_types": [
+            "reader",
+            "writer"
+        ],
+        "conversations": [
+            [
+                "10.0.0.9",
+                "10.0.0.3",
+                "modbus",
+                "reader"
+            ],
+            [
+                "10.0.0.9",
+                "10.0.0.3",
+                "modbus",
+                "writer"
+            ]
+        ],
+        "ip": "10.0.0.9",
+        "protocols": [
+            "modbus"
+        ]
+    },
+    {
+        "associated_machines": [
+            "10.0.0.57"
+        ],
+        "classification": "Undefined",
+        "conversation_types": [
+            "not_implemented"
+        ],
+        "conversations": [
+            [
+                "10.0.0.8",
+                "10.0.0.57",
+                "modbus",
+                "not_implemented"
+            ]
+        ],
+        "ip": "10.0.0.8",
+        "protocols": [
+            "modbus"
+        ]
+    }
+]

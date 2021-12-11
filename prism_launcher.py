@@ -42,7 +42,7 @@ def argumentParser() -> argparse.Namespace:
         description=manual_descriptions['proj_description'],
         formatter_class=RawDescriptionHelpFormatter)
 
-    parser.add_argument('-pcap_file', type=str, action='store',
+    parser.add_argument('-pc','--pcap_file', type=str, action='store',
                         help=manual_descriptions['pcap_file'])
 
     parser.add_argument('-pf', '--protocol_filter', nargs='+', action='store',
