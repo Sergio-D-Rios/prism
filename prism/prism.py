@@ -4,6 +4,10 @@ from scapy.layers.inet import IP, TCP
 import scapy.contrib.modbus as mb
 from prism.machine import Machine
 from prism.visualizer import Visualizer
+from prism.protocols.modbus import modbus_filter, modbus_sort, modbus_classify
+from prism.protocols.s7comm import s7comm_filter, s7comm_sort, s7comm_classify
+from prism.protocols.cip import cip_filter, cip_sort, cip_classify
+from prism.protocols.bacnet import bacnet_filter, bacnet_sort, bacnet_classify
 import json
 import os
 import sys
@@ -45,6 +49,7 @@ class Prism():
         self.machines = []
         self.packets = []
 
+
     def launch(self):
         if self.input_file != None:
             # Make sure that the pcap file provided is usable
@@ -79,47 +84,30 @@ class Prism():
         if self.visualize_flag:
             self.visualizer()
 
-    def pcap_filter(self):
 
+    def pcap_filter(self):
         # Check that passed in filters are usable
         for filter in self.protocol_filters:
             if filter not in _supported_protocols:
                 print(f"{filter} is not a supported protocol!")
                 exit()
 
-        # Fixme need to correct filter to properly check through ethernet 
-        # Start processing the passed in pcap
-        for (packet_data, packet_metadata) in RawPcapNgReader(self.pcap_file):
-            # Create the ethernet header for processed packet
-            ethernet_packet = Ether(packet_data)
+        # FIXME: Not that opening the PCAP again and again is not 
+        # the most efficient 
 
-            # Only interested in IP/TCP packets the rest are ignored
-            try:
-                # Filter by known MAC Schemes of ICS devices here
-                ip_packet = ethernet_packet[IP]
-                tcp_packet = ip_packet[TCP]
-
-                # Filter by desired ICS protocol here 
-                if 'modbus' in self.protocol_filters:
-                    if tcp_packet.sport == 502 or tcp_packet.dport == 502:
-                        if (mb.ModbusADURequest in tcp_packet 
-                                or mb.ModbusADUResponse in tcp_packet):
-                            self.packets.append(ethernet_packet)
-                elif 's7comm' in self.protocol_filters:
-                    print('s7comm not yet supported')
-                    exit()
-                elif 'cip' in self.protocol_filters:
-                    print('cip not yet supported')
-                    exit()
-                elif 'bacnet' in self.protocol_filters:
-                    print('bacnet not yet supported')
-                    exit()
-
-            except Exception as err:
-                print(err)
-                continue
-
-            
+        # Filter by desired ICS protocol here 
+        if 'modbus' in self.protocol_filters:
+            self.packets.extend(modbus_filter(self.pcap_file))
+        elif 's7comm' in self.protocol_filters:
+            print('s7comm not yet supported')
+            exit()
+        elif 'cip' in self.protocol_filters:
+            print('cip not yet supported')
+            exit()
+        elif 'bacnet' in self.protocol_filters:
+            print('bacnet not yet supported')
+            exit()
+         
            
     def pcap_sorter(self):
         for packet in self.packets:
@@ -170,6 +158,7 @@ class Prism():
             if not conversation in curr_machine.conversations:
                 curr_machine.conversations.append(conversation)
 
+
     def pcap_classifier(self):
         for machine in self.machines:
             # Here we analyze each machine and classify it dependent on the 
@@ -199,6 +188,7 @@ class Prism():
             new_machine = Machine(**machine)
             self.machines.append(new_machine)
         
+
     def create_output(self):
         # We need to serialize the list of machine objects into something 
         # that is JSON serializable
@@ -215,8 +205,6 @@ class Prism():
         net = Visualizer()
         net.add_machines(self.machines)
         net.show()
-
-
 
     def modbus_type(self, tcp_packet):
         mb_packet = tcp_packet['ModbusADU']
