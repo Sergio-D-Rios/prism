@@ -19,13 +19,6 @@ _machine_classifications = {
     4: 'Undefined'
 }
 
-_conversation_types = {
-    1: 'reader',
-    2: 'writer',
-    3: 'processor',
-    4: 'not_implemented'
-}
-
 _supported_protocols = [
     'modbus',
     's7comm',
@@ -160,7 +153,7 @@ class Prism():
         for machine in self.machines:
             machines_json.append(machine.__dict__)
 
-        print(f'Writing Classified machines to: {self.output_file}')
+        print(f'Writing machines to: {self.output_file}')
         with open(self.output_file, 'w') as output_file:
             json.dump(machines_json, output_file, sort_keys=True, indent=4)
         
@@ -169,48 +162,3 @@ class Prism():
         net = Visualizer()
         net.add_machines(self.machines)
         net.show()
-
-    def modbus_type(self, tcp_packet):
-        mb_packet = tcp_packet['ModbusADU']
-
-        if mb.ModbusADURequest in mb_packet:         
-            if mb.ModbusPDU01ReadCoilsRequest in mb_packet:
-                return _conversation_types[1]
-            if mb.ModbusPDU02ReadDiscreteInputsRequest in mb_packet:
-                return _conversation_types[1]
-            if mb.ModbusPDU03ReadHoldingRegistersRequest in mb_packet:
-                return _conversation_types[1]
-            if mb.ModbusPDU04ReadInputRegistersRequest in mb_packet:
-                return _conversation_types[1]
-            if mb.ModbusPDU05WriteSingleCoilRequest in mb_packet:
-                return _conversation_types[2]
-            if mb.ModbusPDU06WriteSingleRegisterRequest in mb_packet:
-                return _conversation_types[2]
-            if mb.ModbusPDU0FWriteMultipleCoilsRequest in mb_packet:
-                return _conversation_types[2]
-            if mb.ModbusPDU11ReportSlaveIdRequest in mb_packet:
-                return _conversation_types[1]
-            if mb.ModbusPDU17ReadWriteMultipleRegistersRequest in mb_packet:
-                return _conversation_types[2]
-            return _conversation_types[4]
-            
-        if mb.ModbusADUResponse in mb_packet:
-            if mb.ModbusPDU01ReadCoilsResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU02ReadDiscreteInputsResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU03ReadHoldingRegistersResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU04ReadInputRegistersResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU05WriteSingleCoilResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU06WriteSingleRegisterResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU0FWriteMultipleCoilsResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU11ReportSlaveIdResponse in mb_packet:
-                return _conversation_types[3]
-            if mb.ModbusPDU17ReadWriteMultipleRegistersResponse in mb_packet:
-                return _conversation_types[3]
-            return _conversation_types[4]
