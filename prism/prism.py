@@ -110,53 +110,17 @@ class Prism():
          
            
     def pcap_sorter(self):
-        for packet in self.packets:
-            ip_packet = packet[IP]
-            curr_machine = {}
-            protocol = ""
-        
-            # Here we first need to check if the IP has been seen before, if
-            # not append it to the machine list and populate it's initial data
-            for machine in self.machines:
-                if machine.ip == ip_packet.src:
-                    curr_machine = machine
-                    break
-            else:
-                # New Machine found
-                curr_machine = Machine(ip_packet.src)
-                self.machines.append(curr_machine)
-
-            # check if the protocol has been seen before with this IP
-            # Protocol here is based off of the protocol filter currently just 
-            # checking modbus
-            tcp_packet = ip_packet[TCP]
-
-            # If modbus detected add it to machine's known protocols
-            if tcp_packet.sport == 502 or tcp_packet.dport == 502:
-                if not 'modbus' in curr_machine.protocols:
-                    curr_machine.protocols.append('modbus') 
-                protocol = 'modbus'
-
-            # check if associated IP has been seen before with this machine
-            if not ip_packet.dst in curr_machine.associated_machines:
-                curr_machine.associated_machines.append(ip_packet.dst)
-            
-            # Depending on the type of protocol, we want to determine the 
-            # behavior of the packet
-            if protocol == 'modbus':
-                conversation_type = self.modbus_type(tcp_packet)
-
-            if not conversation_type in curr_machine.conversation_types:
-                curr_machine.conversation_types.append(conversation_type)
-
-            conversation = (ip_packet.src, 
-                            ip_packet.dst, 
-                            protocol, 
-                            conversation_type)
-
-            # check if this conversation has been seen before
-            if not conversation in curr_machine.conversations:
-                curr_machine.conversations.append(conversation)
+        if 'modbus' in self.protocol_filters:
+            self.packets.extend(modbus_sort(self.packets, self.machines))
+        elif 's7comm' in self.protocol_filters:
+            print('s7comm not yet supported')
+            exit()
+        elif 'cip' in self.protocol_filters:
+            print('cip not yet supported')
+            exit()
+        elif 'bacnet' in self.protocol_filters:
+            print('bacnet not yet supported')
+            exit()
 
 
     def pcap_classifier(self):
