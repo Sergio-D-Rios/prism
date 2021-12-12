@@ -104,7 +104,8 @@ class Prism():
            
     def pcap_sorter(self):
         if 'modbus' in self.protocol_filters:
-            self.packets.extend(modbus_sort(self.packets, self.machines))
+            # FIXME: figure out why there is two sets of machines being sorted
+            self.machines.extend(modbus_sort(self.packets, self.machines))
         elif 's7comm' in self.protocol_filters:
             print('s7comm not yet supported')
             exit()
@@ -117,25 +118,18 @@ class Prism():
 
 
     def pcap_classifier(self):
-        for machine in self.machines:
-            # Here we analyze each machine and classify it dependent on the 
-            # protocol and type of communication
-            if 'processor' in machine.conversation_types:
-                machine.classification = _machine_classifications[1]
-                print("Found a Processor")
-
-            elif ('reader' in machine.conversation_types and 
-                    'writer' in machine.conversation_types):
-                machine.classification = _machine_classifications[2]
-                print("Found an HMI/Engineer's Computer")
-
-            elif 'reader' in machine.conversation_types:
-                machine.classification = _machine_classifications[3]
-                print("Found an Alarm") 
-
-            else:
-                machine.classification = _machine_classifications[4]
-                print("Found an Undefined device!")        
+        if 'modbus' in self.protocol_filters:
+            # print(self.machines)
+            self.machines.extend(modbus_classify(self.machines))
+        elif 's7comm' in self.protocol_filters:
+            print('s7comm not yet supported')
+            exit()
+        elif 'cip' in self.protocol_filters:
+            print('cip not yet supported')
+            exit()
+        elif 'bacnet' in self.protocol_filters:
+            print('bacnet not yet supported')
+            exit()        
 
 
     def process_input(self):

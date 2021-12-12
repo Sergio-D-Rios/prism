@@ -11,6 +11,13 @@ _conversation_types = {
     4: 'not_implemented'
 }
 
+_machine_classifications = {
+    1: 'PLC',
+    2: 'HMI',
+    3: 'Alarm',
+    4: 'Undefined'
+}
+
 def modbus_filter(pcap_file):
     # Here we need to do the standard filter based specifically for Modbus 
     # and return the list filtered packets
@@ -85,8 +92,29 @@ def modbus_sort(packets,machines):
 
     return machines
 
-def modbus_classify(self):
-    pass
+def modbus_classify(machines): 
+    for machine in machines:
+        # Here we analyze each machine and classify it dependent on the
+        # protocol and type of communication
+        if 'modbus'in machine.protocols:
+            if 'processor' in machine.conversation_types:
+                machine.classification = _machine_classifications[1]
+                print("Found a Processor")
+
+            elif ('reader' in machine.conversation_types and
+                    'writer' in machine.conversation_types):
+                machine.classification = _machine_classifications[2]
+                print("Found an HMI/Engineer's Computer")
+
+            elif 'reader' in machine.conversation_types:
+                machine.classification = _machine_classifications[3]
+                print("Found an Alarm")
+
+            else:
+                machine.classification = _machine_classifications[4]
+                print("Found an Undefined device!")
+
+    return machines
 
 def modbus_type(tcp_packet):
     mb_packet = tcp_packet['ModbusADU']
