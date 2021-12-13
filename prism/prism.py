@@ -12,13 +12,6 @@ import json
 import os
 import sys
 
-_machine_classifications = {
-    1: 'PLC',
-    2: 'HMI',
-    3: 'Alarm',
-    4: 'Undefined'
-}
-
 _supported_protocols = [
     'modbus',
     's7comm',
@@ -85,7 +78,7 @@ class Prism():
                 print(f"{filter} is not a supported protocol!")
                 exit()
 
-        # FIXME: Not that opening the PCAP again and again is not 
+        # FIXME: Note that opening the PCAP again and again is not 
         # the most efficient 
 
         # Filter by desired ICS protocol here 
@@ -101,11 +94,10 @@ class Prism():
             print('bacnet not yet supported')
             exit()
          
-           
+    # FIXME: Need to find a better solution that does not involve making copies
     def pcap_sorter(self):
         if 'modbus' in self.protocol_filters:
-            # FIXME: figure out why there is two sets of machines being sorted
-            self.machines = modbus_sort(self.packets)
+            self.machines.extend(modbus_sort(self.packets))
         elif 's7comm' in self.protocol_filters:
             print('s7comm not yet supported')
             exit()
@@ -116,7 +108,7 @@ class Prism():
             print('bacnet not yet supported')
             exit()
 
-
+    # FIXME: Need to find a better solution that does not involve making copies
     def pcap_classifier(self):
         if 'modbus' in self.protocol_filters:
             # print(self.machines)
