@@ -105,7 +105,7 @@ class Prism():
     def pcap_sorter(self):
         if 'modbus' in self.protocol_filters:
             # FIXME: figure out why there is two sets of machines being sorted
-            self.machines.extend(modbus_sort(self.packets, self.machines))
+            self.machines = modbus_sort(self.packets)
         elif 's7comm' in self.protocol_filters:
             print('s7comm not yet supported')
             exit()
@@ -120,7 +120,7 @@ class Prism():
     def pcap_classifier(self):
         if 'modbus' in self.protocol_filters:
             # print(self.machines)
-            self.machines.extend(modbus_classify(self.machines))
+            self.machines = modbus_classify(self.machines)
         elif 's7comm' in self.protocol_filters:
             print('s7comm not yet supported')
             exit()

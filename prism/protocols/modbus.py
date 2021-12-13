@@ -46,7 +46,8 @@ def modbus_filter(pcap_file):
     return pckts_of_interest
 
 
-def modbus_sort(packets,machines):
+def modbus_sort(packets):
+    machines = []
     for packet in packets:
         ip_packet = packet[IP]
         curr_machine = None
